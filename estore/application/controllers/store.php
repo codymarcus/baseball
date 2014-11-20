@@ -20,7 +20,65 @@ class Store extends CI_Controller {
     }
 
     function index() {
-    		$this->load->model('product_model');
+    	$this->load->view('loginForm.php');
+    }
+
+    function login() {
+    	redirect('store/products', 'refresh');
+    	/*
+    	$this->load->model('customer_model');
+    	$this->load->library('form_validation');
+    	$this->form_validation->set_rules('username','Username','required|is_unique[products.name]');
+		$this->form_validation->set_rules('password','Password','required');
+
+		// check if user in database...
+		if ($this->form_validation->run() == true) {
+			$login = $this->input->get_post('username');
+			$password = $this->input->get_post('password');
+			// If username and password are found in database
+			//if ($this->customer_model->login($login,$password)) {
+				redirect('store/products', 'refresh');
+			//}
+		}
+		*/
+    }
+
+    function newAccountForm() {
+	    	$this->load->view('product/newAccountForm.php');
+    }
+
+    function createAccount() {
+    	$this->load->library('form_validation');
+		$this->form_validation->set_rules('first','First Name','required');
+		$this->form_validation->set_rules('last','Last Name','required');
+		$this->form_validation->set_rules('login','Username','required'); //|is_unique[customers.login]');
+		$this->form_validation->set_rules('password','Password','required');
+		$this->form_validation->set_rules('confPassword','Confirm Password','required');
+		$this->form_validation->set_rules('email','Email','required');
+		$this->form_validation->set_rules('confEmail','confEmail','required');
+		
+		if ($this->form_validation->run()) {
+			$this->load->model('customer_model');
+
+			$customer = new Customer();
+			$customer->first = $this->input->get_post('first');
+			$customer->last = $this->input->get_post('last');
+			$customer->login = $this->input->get_post('login');
+			$customer->password = $this->input->get_post('password');
+			$customer->email = $this->input->get_post('email');
+			
+			$this->customer_model->insert($product);
+
+			//Then we redirect to the index page again
+			redirect('store/index', 'refresh');
+		}
+		else {			
+			$this->load->view('product/newAccountForm.php');
+		}	
+    }
+
+    function products() {
+    	$this->load->model('product_model');
     		$products = $this->product_model->getAll();
     		$data['products']=$products;
     		$this->load->view('product/list.php',$data);
@@ -52,7 +110,7 @@ class Store extends CI_Controller {
 			$this->product_model->insert($product);
 
 			//Then we redirect to the index page again
-			redirect('store/index', 'refresh');
+			redirect('store/products', 'refresh');
 		}
 		else {
 			if ( !$fileUploadSuccess) {
@@ -118,7 +176,7 @@ class Store extends CI_Controller {
 		redirect('store/index', 'refresh');
 	}
       
-   
+   	
     
     
     
