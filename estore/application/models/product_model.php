@@ -32,6 +32,10 @@ class Product_model extends CI_Model {
 											      'price' => $product->price));
 	}
 	
+	function delete_all() {
+		$tables = array('orders', 'order_items');
+		return $this->db->delee($tables);
+	}
 	
 }
 ?>
