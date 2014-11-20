@@ -11,21 +11,28 @@ class Item_model extends CI_Model {
 		*/
 		return $query->result('Item');
 	}  
+
+	function get($id)
+	{
+		return $this->db->get_where('order_items',array('id' => $id));
+		
+		return $query->row(0,'Item');
+	}
 	
 	function delete_item($id)
 	{
 		return $this->db->delete("order_items", array('id' => $id));
 	}
 	
-	function insert($cur_item) {
-		return ($this->db->insert("order_items", array('order_id' => $cur_item->order_id,
-													  'product_id' => $cur_item->product_id,
-													  'quantity' => $cur_item->quantity));
+	function insert($item) {
+		return $this->db->insert("order_items", array('order_id' => 0,
+													'product_id' => $item->product_id,
+													'quantity' => $item->quantity));
 	}
 
-	function update_quantity($cur_item) {
+	function update_quantity($item) {
 		$this->db->where('id', $order->id);
-		return ($this->db->update("order_items", array('quantity' => $cur_item->quantity)));
+		return ($this->db->update("order_items", array('quantity' => $item->quantity)));
 	}
 	
 }

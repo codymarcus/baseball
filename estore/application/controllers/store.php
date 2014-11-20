@@ -91,23 +91,60 @@ class Store extends CI_Controller {
 
     function products() {
     	$this->load->model('product_model');
-    		$products = $this->product_model->getAll();
-    		$data['products']=$products;
-    		$this->load->view('availableProducts.php',$data);
+    	$products = $this->product_model->getAll();
+    	$data['products']=$products;
+    	$this->load->view('availableProducts.php',$data);
+    	}
+
+    function addToCartForm($id) {
+    	$this->load->model('product_model');
+    	$data['id'] = $id;
+    	$this->load->view('addToCart.php',$data);
     }
 
-    function cart() {
+    function addToCart($id) {
+    	$data = $id;
+    	$this->load->model('product_model');
+    	$products = $this->product_model->get($data);
+
+    	$this->load->library('form_validation');
+    	$this->form_validation->set_rules('quantity','Quantity','required|is_natural_no_zero');
+
+    	if ($this->form_validation->run()) {
+    		$this->load->model('item');
+    		$this->load->model('item_model');
+
+    		$item = new Item();
+    		$item->product_id = $data;
+    		$item->quantity = $this->input->get_post('quantity');
+
+    		$this->item_model->insert($item);
+    	}
+    }
+
+    function shoppingCart() {
     	$this->load->model('product_model');
     	$products = $this->product_model->getAll();
     	$data['products']=$products;
     	$this->load->view('shoppingCart.php',$data);
     }
-
-    function addToCart($id) {
-    	// INSERT ITEM INTO PRODUCT LIST
-    	$this->cart();
-    }
     
+    function checkOut() {
+    	$this->load->view('checkOut.php');
+    }
+
+	function checkOutForm() {
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('creditcard_num','Credit Card Number','required|exact_length[16]|numeric');
+		$this->form_validation->set_rules('creditcard_year','Expiry Year','required|exact_length[4]|numeric');
+		if ($this->form_validation->run()) {
+			// CHECKOUT
+		}
+		else {
+			$this->load->view('checkOut.php');
+		}
+	}
+
     function newForm() {
 	    	$this->load->view('product/newForm.php');
     }
@@ -200,5 +237,49 @@ class Store extends CI_Controller {
 		redirect('store/index', 'refresh');
 	}
     
+	function adminPage() {
+		$this->load->view('adminPage.php');
+	}
+
+	function adminProducts() {
+		$this->load->model('products_model');
+		$products = $this->product_model->getAll();
+		$data['products'] = $products;
+		$this->load->view('product/list.php', $data);
+	}
+
+	function adminCustomers() {
+		$this->load->model('customer_model');
+		$customers = $this->customer_model->getAll();
+		$data['customers'] = $customers;
+		$this->load->view('customer/list.php', $data);
+	}
+
+	function adminOrders() {
+		$this->load->model('order_model');
+		$orders = $this->order_model->getAll();
+		$data['orders'] = $orders;
+		$this->load->view('order/list.php', $data);
+	}
+
+	function deleteCustomer($id) {
+		$this->load->model('customer_model');
+
+		if (isset($id))
+			$this->customer_model->delete($id);
+
+		redirect('store/adminCustomers', 'refresh');
+	}
+
+	function deleteOrder($id) {
+		$this->load->model('order_model');
+
+		if (isset($id))
+			$this->order_model->delete($id);
+
+		redirect('store/adminOrders', 'refresh');
+	}
+
 }
 
+?>
