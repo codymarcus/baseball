@@ -24,8 +24,6 @@ class Store extends CI_Controller {
     }
 
     function login() {
-    	redirect('store/products', 'refresh');
-    	/*
     	$this->load->model('customer_model');
     	$this->load->library('form_validation');
     	$this->form_validation->set_rules('username','Username','required|is_unique[products.name]');
@@ -36,28 +34,35 @@ class Store extends CI_Controller {
 			$login = $this->input->get_post('username');
 			$password = $this->input->get_post('password');
 			// If username and password are found in database
-			//if ($this->customer_model->login($login,$password)) {
+			if ($this->customer_model->login($login,$password)) {
 				redirect('store/products', 'refresh');
-			//}
+			}
+			else {
+			$this->load->view('loginForm.php');
 		}
-		*/
+		}
+		else {
+			$this->load->view('loginForm.php');
+		}
+		
     }
 
     function newAccountForm() {
-	    	$this->load->view('product/newAccountForm.php');
+	    	$this->load->view('newAccountForm.php');
     }
 
     function createAccount() {
     	$this->load->library('form_validation');
 		$this->form_validation->set_rules('first','First Name','required');
 		$this->form_validation->set_rules('last','Last Name','required');
-		$this->form_validation->set_rules('login','Username','required'); //|is_unique[customers.login]');
-		$this->form_validation->set_rules('password','Password','required');
-		$this->form_validation->set_rules('confPassword','Confirm Password','required');
-		$this->form_validation->set_rules('email','Email','required');
-		$this->form_validation->set_rules('confEmail','confEmail','required');
+		$this->form_validation->set_rules('login','Username','required|is_unique[customers.login]');
+		$this->form_validation->set_rules('password','Password','required|min_length[6]');
+		$this->form_validation->set_rules('confPassword','Confirm Password','required|matches[password]');
+		$this->form_validation->set_rules('email','Email','required|valid_email|is_unique[customers.email]');
+		$this->form_validation->set_rules('confEmail','Confirm Email','required|matches[email]');
 		
 		if ($this->form_validation->run()) {
+			$this->load->model('customer');
 			$this->load->model('customer_model');
 
 			$customer = new Customer();
@@ -67,13 +72,13 @@ class Store extends CI_Controller {
 			$customer->password = $this->input->get_post('password');
 			$customer->email = $this->input->get_post('email');
 			
-			$this->customer_model->insert($product);
+			$this->customer_model->insert($customer);
 
 			//Then we redirect to the index page again
 			redirect('store/index', 'refresh');
 		}
 		else {			
-			$this->load->view('product/newAccountForm.php');
+			$this->load->view('newAccountForm.php');
 		}	
     }
 
