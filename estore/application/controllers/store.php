@@ -27,9 +27,8 @@ class Store extends CI_Controller {
 		$this->load->model('product_model');
 		$products = $this->product_model->getAll();
 		$data['products']=$products;
-		$this->load->view('store.php', $data);
+		$this->load->view('availableProducts.php', $data);
 	}
-    }
 
     function login() {
     	$this->load->model('customer_model');
@@ -46,8 +45,8 @@ class Store extends CI_Controller {
 				redirect('store/products', 'refresh');
 			}
 			else {
-			$this->load->view('loginForm.php');
-		}
+				$this->load->view('loginForm.php');
+			}	
 		}
 		else {
 			$this->load->view('loginForm.php');
@@ -94,7 +93,19 @@ class Store extends CI_Controller {
     	$this->load->model('product_model');
     		$products = $this->product_model->getAll();
     		$data['products']=$products;
-    		$this->load->view('product/list.php',$data);
+    		$this->load->view('availableProducts.php',$data);
+    }
+
+    function cart() {
+    	$this->load->model('product_model');
+    	$products = $this->product_model->getAll();
+    	$data['products']=$products;
+    	$this->load->view('shoppingCart.php',$data);
+    }
+
+    function addToCart($id) {
+    	// INSERT ITEM INTO PRODUCT LIST
+    	$this->cart();
     }
     
     function newForm() {
@@ -188,10 +199,6 @@ class Store extends CI_Controller {
 		//Then we redirect to the index page again
 		redirect('store/index', 'refresh');
 	}
-      
-   	
-    
-    
     
 }
 

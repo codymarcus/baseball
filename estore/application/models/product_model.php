@@ -34,7 +34,7 @@ class Product_model extends CI_Model {
 	
 	function delete_all() {
 		$tables = array('orders', 'order_items');
-		return $this->db->delee($tables);
+		return $this->db->delete($tables);
 	}
 	
 }
