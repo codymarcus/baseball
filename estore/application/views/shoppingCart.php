@@ -2,7 +2,7 @@
 
 
 <?php
-	echo "<p>" . anchor('store/index2', 'Return to Store') . "</p>";
+	echo "<p>" . anchor('store/products', 'Return to Store') . "</p>";
 	echo "<p>" . anchor('store/checkOut', 'Checkout') . "</p>";
 
 	echo "<table>";

@@ -6,7 +6,7 @@ class Store extends CI_Controller {
     function __construct() {
     		// Call the Controller constructor
 	    	parent::__construct();
-	    	
+	    	session_start();
 	    	
 	    	$config['upload_path'] = './images/product/';
 	    	$config['allowed_types'] = 'gif|jpg|png';
@@ -20,7 +20,12 @@ class Store extends CI_Controller {
     }
 
     function index() {
-    	$this->load->view('loginForm.php');
+    	if (isset($_SESSION['customer'])) {
+    		redirect('store/products','refresh');
+    	}
+    	else {
+    		$this->load->view('loginForm.php');
+    	}
     }
     
     function index2() {
@@ -40,8 +45,19 @@ class Store extends CI_Controller {
 		if ($this->form_validation->run() == true) {
 			$login = $this->input->get_post('username');
 			$password = $this->input->get_post('password');
+			if($login == 'admin') {
+					redirect('store/adminPage', 'refresh');
+
+			}
 			// If username and password are found in database
 			if ($this->customer_model->login($login,$password)) {
+				$customer = $this->customer_model->login($login,$password);
+
+				if(isset($customer)) {
+					$_SESSION['customer'] = $customer;
+					$data['customer'] = $customer;
+				}
+
 				redirect('store/products', 'refresh');
 			}
 			else {
@@ -51,7 +67,11 @@ class Store extends CI_Controller {
 		else {
 			$this->load->view('loginForm.php');
 		}
-		
+    }
+
+    function logout() {
+    	unset($_SESSION['customer']);
+    	$this->index();
     }
 
     function newAccountForm() {
@@ -92,7 +112,8 @@ class Store extends CI_Controller {
     function products() {
     	$this->load->model('product_model');
     	$products = $this->product_model->getAll();
-    	$data['products']=$products;
+    	$customer = $_SESSION['customer'];
+    	$data = array('products' => $products, 'customer' => $customer);
     	$this->load->view('availableProducts.php',$data);
     	}
 
