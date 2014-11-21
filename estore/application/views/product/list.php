@@ -1,5 +1,11 @@
-<h2>Product Table</h2>
-<?php 
+<h1>Baseball Card Store</h1>
+<h2>Administrator Page</h2>
+
+
+<?php
+		echo "<p>" . anchor('store/index', 'Return to Store') . "</p>";
+		echo "<p>" . anchor('store/adminPage', 'Previous') . "</p>";
+		echo "<h2>Product Table</h2>";
 		echo "<p>" . anchor('store/newForm','Add New') . "</p>";
  	  
 		echo "<table>";
@@ -19,5 +25,4 @@
 			echo "</tr>";
 		}
 		echo "<table>";
-?>	
-
+?>

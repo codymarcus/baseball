@@ -151,15 +151,62 @@ class Store extends CI_Controller {
     }
 
 	function checkOutForm() {
+
+		$this->load->view('checkOut.php');				
+
+		$this->load->helper('date');
+		$month = gmdate('m');
+		$year = gmdate('Y');
+
+		$cur_month = $this->input->post('creditcard_month');
+		$cur_year = $this->input->post('creditcard_year');
+
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('creditcard_num','Credit Card Number','required|exact_length[16]|numeric');
-		$this->form_validation->set_rules('creditcard_year','Expiry Year','required|exact_length[4]|numeric');
-		if ($this->form_validation->run()) {
-			// CHECKOUT
+		$this->form_validation->set_rules('creditcard_num', 'Credit Card Number', 'required|exact_length[16]|numeric');
+		$this->form_validation->set_rules('creditcard_month', 'Credit Card Month', 'required|exact_length[2]|numeric');
+		$this->form_validation->set_rules('creditcard_year', 'Credit Card Year', 'required|exact_length[4]|numeric');
+
+		if($this->form_validation->run() == TRUE) {
+			if($this->input->post('creditcard_year') < date('Y')) {
+					echo "Card Expired!";
+					$this->load->view('checkOut.php');
+			}
+
+			if($this->input->post('creditcard_year') == date('Y')) {
+				if($this->input->post('creditcard_month') < date('m')) {
+					echo "Card Expired!";
+					$this->load->view('checkOut.php');				
+				}
+
+			}
+			else {
+				$this->load->model('order_model');
+				$this->load->helper('date');
+				$cur_order = new Order();
+				$cur_order->customer_id = $this->session->userdata('id');
+				$cur_order->order_time = mdate("%h:%i", time());
+				$cur_order->order_date = mdate("%Y - %m - %d", time());
+				$cur_order->total = $this->cart->total();
+				$cur_order->creditcard_num = $this->input->get_post('creditcard_num');
+				$cur_order->creditcard_month = $this->input->get_post('creditcard_month');
+				$cur_order->creditcard_year = $this->input->get_post('creditcard_year');
+				$this->order_model->insert($cur_order);
+				//ADD ALL ITEMS FROM item_model TO THIS ORDER
+				$this->load->view('receipt.php');
+				$this->session->sess_destroy();
+			}
 		}
-		else {
-			$this->load->view('checkOut.php');
-		}
+
+		//$this->load->view('receipt.php');
+	
+	}
+
+	function finalizeOrders() {
+		$this->load->model('order_model');
+		$orders = $this->order_model->getAll();
+		$data['orders'] = $orders;
+
+		$this->load->view('order/finalizedOrders.php', $data);
 	}
 
     function newForm() {
@@ -188,7 +235,7 @@ class Store extends CI_Controller {
 			$this->product_model->insert($product);
 
 			//Then we redirect to the index page again
-			redirect('store/products', 'refresh');
+			redirect('store/adminProducts', 'refresh');
 		}
 		else {
 			if ( !$fileUploadSuccess) {
@@ -259,7 +306,7 @@ class Store extends CI_Controller {
 	}
 
 	function adminProducts() {
-		$this->load->model('products_model');
+		$this->load->model('product_model');
 		$products = $this->product_model->getAll();
 		$data['products'] = $products;
 		$this->load->view('product/list.php', $data);

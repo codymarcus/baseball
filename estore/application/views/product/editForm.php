@@ -24,5 +24,6 @@
 	
 	echo form_submit('submit', 'Save');
 	echo form_close();
+	redirect('store/adminPage/', 'refresh');
 ?>	
 
