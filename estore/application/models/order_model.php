@@ -37,7 +37,7 @@ class Order_model extends CI_Model {
 	
 	function create_receipt($order) {
 		$this->db->from('order_items');
-		$this->db->where('id, $order->id');
+		$this->db->where('id', $order->id);
 		return $query->result('Item');
 	}
 	
