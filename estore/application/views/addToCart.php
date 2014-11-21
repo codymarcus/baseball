@@ -7,9 +7,9 @@
 <?php 
 	echo "<p>" . anchor('store/products','Back') . "</p>";
 
-	// echo "<h3>" . $this->product_model->get($id)->name . "</h3>";
+	echo "<h3>" . "Purchase " . $product->name . "</h3>";
 	
-	echo form_open_multipart('store/addToCart/$id');
+	echo form_open_multipart("store/addToCart");
 		
 	echo form_label('Quantity'); 
 	echo form_error('quantity');

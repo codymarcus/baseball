@@ -7,20 +7,21 @@
 
 	echo "<table>";
 	echo "<tr> <th>Name</th> <th>Description</th> <th>Price</th> <th>Photo</th> <th>Quantity</th> </tr>";
-	if (empty($order_items)) {
+	if (empty($picked_products)) {
 		echo "Your cart is empty.";
 	}
 	else {
-		foreach ($order_items as $item) {
+		$total = 0;
+		foreach ($picked_products as $picked) {
 				echo "<tr>";
-				echo "<td>" . $item->name . "</td>";
-				echo "<td>" . $item->description . "</td>";
-				echo "<td>" . $item->price . "</td>";
-				echo "<td><img src='" . base_url() . "images/product/" . $item->photo_url ."'/></td>";
+				echo "<td>" . $picked->name . "</td>";
+				echo "<td>" . $picked->description . "</td>";
+				echo "<td>" . $picked->price . "</td>";
+				echo "<td><img src='" . base_url() . "images/product/" . $picked->photo_url ."'/></td>";
 				echo "<td>" . form_input('quantity', set_value('quantity'),'required') . "</td>";
-				$total = $total + $item->quantity * $item->price;
-				echo "<td>" . $item->quantity * $item->price; 
-				echo "<td>" . anchor("store/editForm/$item->id",'Update') . "</td>";
+				$total = $total + $picked->quantity * $picked->price;
+				echo "<td>" . $picked->quantity * $picked->price; 
+				//echo "<td>" . anchor("store/editForm/$item->id",'Update') . "</td>";
 				echo "</tr>";
 		}
 		echo "<table>";

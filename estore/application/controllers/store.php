@@ -7,6 +7,7 @@ class Store extends CI_Controller {
     		// Call the Controller constructor
 	    	parent::__construct();
 	    	session_start();
+	    	$_SESSION ['picked'] = array();
 	    	
 	    	$config['upload_path'] = './images/product/';
 	    	$config['allowed_types'] = 'gif|jpg|png';
@@ -55,7 +56,6 @@ class Store extends CI_Controller {
 
 				if(isset($customer)) {
 					$_SESSION['customer'] = $customer;
-					$data['customer'] = $customer;
 				}
 
 				redirect('store/products', 'refresh');
@@ -119,34 +119,30 @@ class Store extends CI_Controller {
 
     function addToCartForm($id) {
     	$this->load->model('product_model');
-    	$data['id'] = $id;
+    	$product = $this->product_model->get($id);
+    	$data['product'] = $product;
+    	$_SESSION['current'] = $product;
     	$this->load->view('addToCart.php',$data);
     }
 
-    function addToCart($id) {
-    	$data = $id;
+    function addToCart() {
     	$this->load->model('product_model');
-    	$products = $this->product_model->get($data);
 
     	$this->load->library('form_validation');
     	$this->form_validation->set_rules('quantity','Quantity','required|is_natural_no_zero');
 
     	if ($this->form_validation->run()) {
-    		$this->load->model('item');
-    		$this->load->model('item_model');
+    		$product = $_SESSION['current'];
+    		$product->quantity = $this->input->get_post('quantity');
 
-    		$item = new Item();
-    		$item->product_id = $data;
-    		$item->quantity = $this->input->get_post('quantity');
-
-    		$this->item_model->insert($item);
+    		$_SESSION['picked'][] = $product;
     	}
+    	$this->shoppingCart();
     }
 
     function shoppingCart() {
     	$this->load->model('product_model');
-    	$products = $this->product_model->getAll();
-    	$data['products']=$products;
+    	$data['picked_products']=$_SESSION['picked'];
     	$this->load->view('shoppingCart.php',$data);
     }
     
