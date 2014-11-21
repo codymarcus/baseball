@@ -3,7 +3,6 @@
 
 
 <?php
-	echo "<p>" . anchor('store/index', 'Return to Store') . "</p>";
 	echo "<p>" . anchor('store/adminPage', 'Previous') . "</p>";
 	echo "<h2>Orders</h2>";
 	echo "<table>";

@@ -24,11 +24,11 @@
 
 	echo form_label('Password');
 	echo form_error('password');
-	echo form_input('password',set_value('password'),"required");
+	echo form_password('password',set_value('password'),"required");
 
 	echo form_label('Confirm Password');
 	echo form_error('confPassword');
-	echo form_input('confPassword',set_value('confPassword'),"required");
+	echo form_password('confPassword',set_value('confPassword'),"required");
 	
 	echo form_label('Email');
 	echo form_error('email');

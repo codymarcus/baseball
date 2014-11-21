@@ -11,8 +11,8 @@
 
 	echo form_open('store/checkOutForm');
 	echo form_label('Credit Card Number');
-	echo form_error('creditcard_num');
-	echo form_input('creditcard_num',set_value('creditcard_num'),"required");
+	echo form_error('creditcard_number');
+	echo form_input('creditcard_number',set_value('creditcard_number'),"required");
 	echo form_label('Expiry Month');
 	echo "<br>";
 	$month = array('01' => '01', '02' =>'02', '03'=>'03', '04'=>'04', '05'=>'05', '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10', '11'=>'11', '12'=>'12');

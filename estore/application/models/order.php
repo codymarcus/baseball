@@ -5,7 +5,7 @@ class Order  {
 	public $order_date;
 	public $order_time;
 	public $total;
-	public $creditcard_num;
+	public $creditcard_number;
 	public $creditcard_month;
 	public $creditcard_year;	
 }

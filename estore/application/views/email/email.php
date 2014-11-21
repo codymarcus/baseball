@@ -6,14 +6,14 @@
 	echo "<tr><th>Card</th> <th>Price</th> <th>Quantity</th> <th>Total</th></tr>";
 	$subtotal = 0;
 
-	foreach ($this->cart->contents() as $item) { //FIND OUT WHAT TO REPLACE FOR order_items
+	foreach ($items as $item) { //FIND OUT WHAT TO REPLACE FOR order_items
 		echo "<tr>";
-		echo "<td>" . $item['name'] . "</td>";
-		echo "<td>" . $item['price'] . "</td>";
-		echo "<td>" . $item['qty'] . "</td>";
-		echo "<td>" . $item['qty'] * $item['price'] . "</td>";
+		echo "<td>" . $item->name . "</td>";
+		echo "<td>" . $item->price . "</td>";
+		echo "<td>" . $item->quantity . "</td>";
+		echo "<td>" . $item->quantity * $item->price . "</td>";
 		//echo "<td>" . $item->name . "</td>";
-		$subtotal = $subtotal + $item['qty'] * $item['price'];
+		$subtotal = $subtotal + $item->quantity * $item->price;
 		echo "<td></td>";
 		echo "</tr>";
 	}

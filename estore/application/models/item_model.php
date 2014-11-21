@@ -25,7 +25,7 @@ class Item_model extends CI_Model {
 	}
 	
 	function insert($item) {
-		return $this->db->insert("order_items", array('order_id' => 0,
+		return $this->db->insert("order_items", array('order_id' => $item->order_id,
 													'product_id' => $item->product_id,
 													'quantity' => $item->quantity));
 	}
