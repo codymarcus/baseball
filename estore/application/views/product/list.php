@@ -14,7 +14,7 @@
 			echo "<tr>";
 			echo "<td>" . $product->name . "</td>";
 			echo "<td>" . $product->description . "</td>";
-			echo "<td>" . $product->price . "</td>";
+			echo "<td>$" . number_format((float)$product->price, 2, '.', '') . "</td>";
 			echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
 				
 			echo "<td>" . anchor("store/delete/$product->id",'Delete',"onClick='return confirm(\"Do you really want to delete this record?\");'") . "</td>";

@@ -9,7 +9,7 @@
 	foreach ($items as $item) { 
 		echo "<tr>";
 		echo "<td>" . $item->name . "</td>";
-		echo "<td>" . $item->price . "</td>";
+		echo "<td>" . round($item->price, 2) . "</td>";
 		echo "<td>" . $item->quantity . "</td>";
 		echo "<td>" . $item->quantity * $item->price . "</td>";
 		$subtotal = $subtotal + $item->quantity * $item->price;
@@ -17,7 +17,7 @@
 		echo "</tr>";
 	}
 	echo "</table>";
-	echo "<br> Total = $" . $subtotal;
+	echo "<br> Total = $" . number_format((float)$subtotal, 2, '.', '');
 	echo "<br>";
 	echo anchor('store/index2', 'Back to shop');
 //$this->session->sess_destroy();

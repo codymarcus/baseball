@@ -18,6 +18,6 @@
 		echo "</tr>";
 	}
 	echo "</table>";
-	echo "<br> Total = $" . $subtotal;
+	echo "<br> Total = $" . number_format((float)$subtotal, 2, '.', '');
 
 ?>

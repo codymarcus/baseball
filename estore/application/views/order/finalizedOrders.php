@@ -13,7 +13,7 @@
 		echo "<td>" . $order->customer_id . "</td>";
 		echo "<td>" . $order->order_date . "</td>";
 		echo "<td>" . $order->order_time . "</td>";
-		echo "<td>" . $order->total . "</td>";
+		echo "<td>$" . number_format((float)$order->total, 2, '.', '') . "</td>";
 		echo "<td>" . $order->creditcard_number . "</td>";
 		echo "<td>" . $order->creditcard_month . "</td>";
 		echo "<td>" . $order->creditcard_year . "</td>";

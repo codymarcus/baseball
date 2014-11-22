@@ -15,17 +15,17 @@
 		foreach ($picked_items as $picked) {
 				echo "<tr>";
 				echo "<td>" . $picked->name . "</td>";
-				echo "<td>$" . $picked->price . "</td>";
+				echo "<td>$" . number_format((float)$picked->price, 2, '.', '') . "</td>";
 				echo "<td><img src='" . base_url() . "images/product/" . $picked->photo_url ."'/></td>";
 				echo "<td>" . $picked->quantity . "</td>";
 				$total = $total + $picked->quantity * $picked->price;
-				echo "<td>$" . $picked->quantity * $picked->price; 
+				echo "<td>$" . number_format((float)$picked->quantity * $picked->price, 2, '.', '') . "</td>";
 				echo "<td>" . anchor("store/updateQuantity/$picked->product_id", 'Change Quantity') . "</td>";
 				echo "<td>" . anchor("store/removeItem/$picked->product_id", 'Remove from Cart') . "</td>";
 				//echo "<td>" . anchor("store/editForm/$item->id",'Update') . "</td>";
 				echo "</tr>";
 		}
 		echo "<table>";
-		echo "<br>Subtotal: $" . $total;
+		echo "<br>Subtotal: $" . number_format((float)$total, 2, '.', '');
 	}
 ?>

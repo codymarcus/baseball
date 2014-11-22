@@ -14,7 +14,7 @@
 		echo "<tr>";
 		echo "<td>" . $product->name . "</td>";
 		echo "<td>" . $product->description . "</td>";
-		echo "<td>" . $product->price . "</td>";
+		echo "<td>$" . number_format((float)$product->price, 2, '.', '') . "</td>";
 		echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url ."'/></td>";
 		echo "<td>" . anchor("store/addToCartForm/$product->id", 'Add to Cart') . "</td>";
 		echo "</tr>";

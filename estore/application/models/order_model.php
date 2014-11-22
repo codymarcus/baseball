@@ -1,10 +1,9 @@
 <?php
 class Order_model extends CI_Model {
 
-
 	function getAll()
 	{  
-		$query = $this->db->query('SELECT orders.id, orders.order_date, orders.order_time, orders.total FROM orders INNER JOIN customers ON orders.customer_id=customers.id ORDER BY orders.id');
+		$query = $this->db->query('SELECT orders.id, orders.customer_id, orders.order_date, orders.order_time, orders.total FROM orders INNER JOIN customers ON orders.customer_id=customers.id ORDER BY orders.id');
 		return $query->result('Order');
 	}  
 	
@@ -18,7 +17,7 @@ class Order_model extends CI_Model {
 	}
 
 	function insert($order) {
-		return $this->db->insert('orders', array('customer_id' => $order->customer_id,
+		return $this->db->insert("orders", array('customer_id' => $order->customer_id,
 												  'order_date' => $order->order_date,
 												  'order_time' => $order->order_time,
 												  'total' => $order->total,

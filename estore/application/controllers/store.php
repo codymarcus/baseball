@@ -7,6 +7,7 @@ class Store extends CI_Controller {
     		// Call the Controller constructor
 	    	parent::__construct();
 	    	session_start();
+	    	date_default_timezone_set('America/New_York');
 	    	
 	    	$config['upload_path'] = './images/product/';
 	    	$config['allowed_types'] = 'gif|jpg|png';
@@ -193,12 +194,13 @@ class Store extends CI_Controller {
     			$item->name = $product->name;
     			$item->price = $product->price;
     			$item->quantity = $product->quantity;
-    			echo $item->name;
+    			//echo $item->name;
     			$_SESSION['picked'][] = $item;
     		}
 
     	}
-    	$this->shoppingCart();
+    	//$this->shoppingCart();
+    	redirect('store/shoppingCart', 'refresh');
     }
 
     function shoppingCart() {
@@ -229,128 +231,77 @@ class Store extends CI_Controller {
 
 		if($this->form_validation->run() == TRUE) {
 			if($this->input->post('creditcard_year') < gmdate('Y')) {
-					echo "Card Expired!";
+					//echo "Card Expired!";
+					redirect ('store/expiredCard', 'refresh');
 					//$this->load->view('checkOut.php');
 			}
 
 			if($this->input->post('creditcard_year') == gmdate('Y')) {
 				if($this->input->post('creditcard_month') < gmdate('m')) {
-					echo "Card Expired!";
+					//echo "Card Expired!";			
+					redirect ('store/expiredCard', 'refresh');
 					//$this->load->view('checkOut.php');				
 				}
-				else {
-					$this->load->model('customer_model');
-					$id = $this->session->userdata('id');
-		//$customer = $this->customer_model->get($id);
-		$customer = $this->customer_model->get(1);
-		$email = $customer->email;
-
-		$this->load->library('email');
-		$config = array('protocol' => 'smtp',
-						'smtp_host' => 'smtp.gmail.com',
-						'smtp_port' => 465, 
-						'smtp_user' => 'estorecsc309@gmail.com',
-						'smtp_pass' => 'estorecsc',
-						'mailtype' => 'html',
-						'charset' => 'iso-8859-1');
-
-		$this->email->set_mailtype("html");
-		$this->email->from('estorecsc309@gmail.com', 'Baseball Card eStore');
-		$this->email->to($email);
-		$this->email->subject('Purchase Confirmation E-mail');
-		$data['items'] = $_SESSION['picked'];
-		$message = $this->load->view('email/email', $data, true);
-		// echo $_SESSION['customer']->email;
-		// echo $this->email->print_debugger();
-				$this->load->model('order');
-				$this->load->model('order_model');
-				$this->load->model('item_model');
-				$this->load->helper('date');
-
-				$cur_order = new Order();
-				$cur_order->customer_id = $_SESSION['customer']->id;
-				$cur_order->order_time = gmdate("%h:%i", time());
-				$cur_order->order_date = gmdate("%Y - %m - %d", time());
-
-				$cur_order->total = 0;
-
-				$cur_order->creditcard_number = $this->input->get_post('creditcard_number');
-				$cur_order->creditcard_month = $this->input->get_post('creditcard_month');
-				$cur_order->creditcard_year = $this->input->get_post('creditcard_year');
-
-				foreach ($_SESSION['picked'] as $picked_item) {
-					$picked_item->order_id = $cur_order->id;
-					$this->item_model->insert($picked_item);
-					$cur_order->total = $cur_order->total + ($picked_item->price * $picked_item->quantity);
-				}
-
-				$this->order_model->insert($cur_order);
-				//ADD ALL ITEMS FROM item_model TO THIS ORDER
-				//$this->load->view('receipt.php');
-				redirect('store/receipt', 'refresh');
-				}
-
 			}
-			else {
-						$this->load->model('customer_model');
-		$id = $this->session->userdata('id');
-		//$customer = $this->customer_model->get($id);
-		$customer = $_SESSION['customer'];
-		$email = $customer->email;
-
-		$this->load->library('email');
-		$config = array('protocol' => 'smtp',
-						'smtp_host' => 'smtp.gmail.com',
-						'smtp_port' => 465, 
-						'smtp_user' => 'estorecsc309@gmail.com',
-						'smtp_pass' => 'estorecsc',
-						'mailtype' => 'html',
-						'charset' => 'iso-8859-1');
-
-		$this->email->set_mailtype("html");
-		$this->email->from('estorecsc309@gmail.com', 'Baseball Card eStore');
-		$this->email->to($email);
-		$this->email->subject('Purchase Confirmation E-mail');
-		$data['items'] = $_SESSION['picked'];
-		$message = $this->load->view('email/email', $data, true);
-		$this->email->message($message);
-		$this->email->send();
-		// echo $_SESSION['customer']->email;
-		// echo $this->email->print_debugger();
-				$this->load->model('order');
-				$this->load->model('order_model');
-				$this->load->model('item_model');
-				$this->load->helper('date');
-
-				$cur_order = new Order();
-				$cur_order->customer_id = $_SESSION['customer']->id;
-				$cur_order->order_time = gmdate("%h:%i", time());
-				$cur_order->order_date = gmdate("%Y - %m - %d", time());
-
-				$cur_order->total = 0;
-
-				$cur_order->creditcard_number = $this->input->get_post('creditcard_number');
-				$cur_order->creditcard_month = $this->input->get_post('creditcard_month');
-				$cur_order->creditcard_year = $this->input->get_post('creditcard_year');
-				$this->order_model->insert($cur_order);
-
-				foreach ($_SESSION['picked'] as $picked_item) {
-					$picked_item->order_id = $cur_order->id;
-					$this->item_model->insert($picked_item);
-					$cur_order->total = $cur_order->total + ($picked_item->price * $picked_item->quantity);
-				}
-
-				$this->order_model->insert($cur_order);
-				//ADD ALL ITEMS FROM item_model TO THIS ORDER
-				//$this->load->view('receipt.php');
-				redirect('store/receipt', 'refresh');
-
-				//$this->session->sess_destroy();
-			}
-		}
+		
 	
-	}
+			//$this->load->model('order');
+			$this->load->helper('date');
+			$this->load->model('order_model');
+			$this->load->model('item_model');
 
+			$order = new Order();
+			$order->customer_id = $_SESSION['customer']->id;
+			$order->order_date = mdate( "%Y-%m-%d", time());
+			$order->order_time = mdate( "%h:%i", time());
+			//$order->order_date = mdate( "%Y-%m-%d", time());
+			//$order->order_time = mdate( "%h:%i", time());
+			$total = 0;
+
+			$order->creditcard_number = $this->input->get_post('creditcard_number');
+			$order->creditcard_month = $this->input->get_post('creditcard_month');
+			$order->creditcard_year = $this->input->get_post('creditcard_year');
+
+			foreach ($_SESSION['picked'] as $picked_item) {
+				$total = $total + ($picked_item->price * $picked_item->quantity);
+			}
+			$order->total = $total;
+			$orderID = $this->order_model->insert($order);
+
+			foreach ($_SESSION['picked'] as $picked_item) {
+				$picked_item->order_id = $orderID;
+				$this->item_model->insert($picked_item);
+			}
+
+			$this->load->model('customer_model');
+			$customer = $_SESSION['customer'];
+			$email = $customer->email;
+
+			$this->load->library('email');
+			$config = array('protocol' => 'smtp',
+							'smtp_host' => 'smtp.gmail.com',
+							'smtp_port' => 465, 
+							'smtp_user' => 'estorecsc309@gmail.com',
+							'smtp_pass' => 'estorecsc',
+							'mailtype' => 'html',
+							'charset' => 'iso-8859-1');
+
+			$this->email->set_mailtype("html");
+			$this->email->from('estorecsc309@gmail.com', 'Baseball Card eStore');
+			$this->email->to($email);
+			$this->email->subject('Purchase Confirmation E-mail');
+			$data['items'] = $_SESSION['picked'];
+			$message = $this->load->view('email/email', $data, true);
+			// echo $_SESSION['customer']->email;
+			// echo $this->email->print_debugger();
+			redirect('store/receipt', 'refresh');
+
+		}
+	}
+	function expiredCard() {
+		echo '<script>alert("Your credit card is expired.")</script>';
+		redirect('store/checkOutForm', 'refresh');
+	}
 	function finalizeOrders() {
 		$this->load->model('order');
 		$this->load->model('order_model');
@@ -524,6 +475,13 @@ class Store extends CI_Controller {
 			$this->order_model->delete($id);
 
 		redirect('store/adminOrders', 'refresh');
+	}
+
+	function listOrderItems($id) {
+		$this->load->model('item_model');
+		$items = $this->item_model->getAll($id);
+		$data['items'] = $items;
+		$this->load->view('order/listItems.php', $data);
 	}
 
 }

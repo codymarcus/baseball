@@ -13,7 +13,7 @@
 		echo "<td>" . $order->customer_id . "</td>";
 		echo "<td>" . $order->order_date . "</td>";
 		echo "<td>" . $order->order_time . "</td>";
-		echo "<td>" . $order->order_total . "</td>";
+		echo "<td>$" . number_format((float)$order->total, 2, '.', '') . "</td>";
 		echo "<td>" . anchor("store/listOrderItems/$order->id", 'Order Items') . "</td>";		
 		echo "<td>" . anchor("store/deleteOrder/$order->id", 'Delete Order', "onClick = 'return confirm(\"Are you sure you want to delete this order?\");'") . "</td>";
 	}
