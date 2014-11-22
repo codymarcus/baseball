@@ -24,6 +24,12 @@ class Customer_model extends CI_Model {
 	function delete($id) {
 		return $this->db->delete("customers",array('id' => $id ));
 	}
+
+	function deleteAll() {
+		$this->db->empty_table('orders');
+		$this->db->empty_table('order_items');
+		$this->db->empty_table('customers');
+	}
 	
 	function insert($customer) {
 		return $this->db->insert("customers", array('first' => $customer->first,

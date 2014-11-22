@@ -82,12 +82,12 @@ class Store extends CI_Controller {
 
     function createAccount() {
     	$this->load->library('form_validation');
-		$this->form_validation->set_rules('first','First Name','required');
-		$this->form_validation->set_rules('last','Last Name','required');
-		$this->form_validation->set_rules('login','Username','required|is_unique[customers.login]');
-		$this->form_validation->set_rules('password','Password','required|min_length[6]');
+		$this->form_validation->set_rules('first','First Name','required|max_length[24]');
+		$this->form_validation->set_rules('last','Last Name','required|max_length[24]');
+		$this->form_validation->set_rules('login','Username','required|is_unique[customers.login]|max_length[16]');
+		$this->form_validation->set_rules('password','Password','required|min_length[6]|max_length[16]');
 		$this->form_validation->set_rules('confPassword','Confirm Password','required|matches[password]');
-		$this->form_validation->set_rules('email','Email','required|valid_email|is_unique[customers.email]');
+		$this->form_validation->set_rules('email','Email','required|valid_email|is_unique[customers.email]|max_length[45]');
 		$this->form_validation->set_rules('confEmail','Confirm Email','required|matches[email]');
 		
 		if ($this->form_validation->run()) {
@@ -205,7 +205,8 @@ class Store extends CI_Controller {
 
     function shoppingCart() {
     	$this->load->model('product_model');
-    	$data['picked_items']=$_SESSION['picked'];
+    	$products = $this->product_model->getAll();
+    	$data = array('products' => $products, 'picked_items' => $_SESSION['picked']);
     	$this->load->view('shoppingCart.php',$data);
     }
     
@@ -300,7 +301,7 @@ class Store extends CI_Controller {
 	}
 	function expiredCard() {
 		echo '<script>alert("Your credit card is expired.")</script>';
-		redirect('store/checkOutForm', 'refresh');
+		$this->checkOutForm();
 	}
 	function finalizeOrders() {
 		$this->load->model('order');
@@ -343,7 +344,7 @@ class Store extends CI_Controller {
     
 	function create() {
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('name','Name','required|is_unique[products.name]');
+		$this->form_validation->set_rules('name','Name','required|is_unique[products.name]|is_unique[prodcuts.name]|max_length[45]');
 		$this->form_validation->set_rules('description','Description','required');
 		$this->form_validation->set_rules('price','Price','required');
 		
@@ -406,7 +407,7 @@ class Store extends CI_Controller {
 			$this->load->model('product_model');
 			$this->product_model->update($product);
 			//Then we redirect to the index page again
-			redirect('store/index', 'refresh');
+			redirect('store/adminPage', 'refresh');
 		}
 		else {
 			$product = new Product();
@@ -432,6 +433,7 @@ class Store extends CI_Controller {
 	function receipt() {
 		$data['items'] = $_SESSION['picked'];
 		$this->load->view('receipt.php', $data);
+		$_SESSION['picked'] = array();
 	}
     
 	function adminPage() {
@@ -482,6 +484,13 @@ class Store extends CI_Controller {
 		$items = $this->item_model->getAll($id);
 		$data['items'] = $items;
 		$this->load->view('order/listItems.php', $data);
+	}
+
+	function deleteAll() {
+		$this->load->model('customer_model');
+		$this->customer_model->deleteAll();
+
+		redirect('store/adminCustomers', 'refresh');
 	}
 
 }

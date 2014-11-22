@@ -34,6 +34,11 @@ class Item_model extends CI_Model {
 		$this->db->where('id', $order->id);
 		return ($this->db->update("order_items", array('quantity' => $item->quantity)));
 	}
+
+	function get_image($id) {
+		$query = $this->db->query('SELECT * FROM order_items INNER JOIN products on order_items.product_id = products.id WHERE product_id = '.$id.'');
+		return $query->row(7,'Item');
+	}
 	
 }
 ?>

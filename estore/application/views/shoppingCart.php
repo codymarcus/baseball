@@ -13,10 +13,14 @@
 	else {
 		$total = 0;
 		foreach ($picked_items as $picked) {
+			foreach ($products as $p) {
+				if ($p->id == $picked->product_id)
+					$product = $p;
+			}
 				echo "<tr>";
 				echo "<td>" . $picked->name . "</td>";
 				echo "<td>$" . number_format((float)$picked->price, 2, '.', '') . "</td>";
-				echo "<td><img src='" . base_url() . "images/product/" . $picked->photo_url ."'/></td>";
+				echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url ."' width='100px'/></td>";
 				echo "<td>" . $picked->quantity . "</td>";
 				$total = $total + $picked->quantity * $picked->price;
 				echo "<td>$" . number_format((float)$picked->quantity * $picked->price, 2, '.', '') . "</td>";

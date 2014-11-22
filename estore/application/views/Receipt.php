@@ -19,7 +19,7 @@
 	echo "</table>";
 	echo "<br> Total = $" . number_format((float)$subtotal, 2, '.', '');
 	echo "<br>";
-	echo anchor('store/index2', 'Back to shop');
+	echo anchor('store/products', 'Back to shop');
 //$this->session->sess_destroy();
 ?>	
 <p><button onClick="window.print()">Print receipt</button><p>

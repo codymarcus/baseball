@@ -15,4 +15,6 @@
 		echo "<td>" . anchor("store/deleteCustomer/$customer->id", 'Delete Customer', "onClick = 'return confirm(\"Are you sure you want to delete this customer?\");'") . "</td>";
 	}
 	echo "<table>";
+	echo "<tr>" . anchor("store/deleteAll", 'Delete All Customers & Orders', "onClick = 'return confirm(\"Are you sure you want to delete all customers & orders?\");'") . "</tr>";
+
 ?>
